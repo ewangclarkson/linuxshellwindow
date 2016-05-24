@@ -1,0 +1,379 @@
+#!/bin/sh
+#error handling
+trap 'exit 128' INT
+#creats parameter to be passed to functions
+set parameter 
+#creat files 
+touch text
+touch R_result
+#funtion open terminal below opens the commandline
+open_terminal(){
+ gnome-terminal
+}
+#function below compresses a file specified by the user
+file_compress(){
+  local R_compress
+  gdialog --title "COMPRESS FILE" --inputbox "FILE TO BE COMPRESSED" 10 20 2>text
+  R_compress=$(cat text)
+  if [ "$R_compress" != "0" ]
+    then
+       gzip "$R_compress"
+ else
+     rm R_result
+     rm text
+     exit 127;
+ fi
+ return 0;
+}
+#function uncompresses a compressed file
+un_compress(){
+  local R_uncompress
+  gdialog --title "INFORMATION" --infobox "The file to be uncompress must have extention .gz" 10 30
+  gdialog --title "UNCOMPRESS FILE" --inputbox "FILE TO BE UNCOMPRESSED" 10 20 2>text
+  R_uncompress=$(cat text)
+ if [ "$R_uncompress" != "0" ]
+    then
+       gunzip "$R_uncompress"
+ else
+     rm R_result
+     rm text
+     exit 127;
+ fi
+ return 0;
+}
+#open gedit below opens the gedit text editor
+open_gedit(){
+ gedit userdocument
+}
+#pathfunction below enables the user move a file from one diectory to the other
+path(){
+  local Q_answer
+   local Q_result
+  gdialog --title "MENU" --menu "CHOOSE PATH" 13 25 25  1 "HOME" 2 "Desktop" 3 "Documents" 4 "Musics" 5 "Videos" 6 "Pictures" 7 "Documents" 2>R_result
+  Q_answer=$(cat R_result)
+  if [ "$Q_answer" != 0 ]
+    then
+      case "$Q_answer" in 
+
+          1) 
+            gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 20 2>text
+            Q_result=$(cat text)
+            if [ "$Q_result" = "0" ]
+              then
+                rm R_result
+                rm text
+                exit 127;
+             else
+               gcc -o clark texteditor.o libclark.a
+               ./clark "$parameter" "$Q_result" "$Q_answer"
+                 rm clark
+             fi ;;
+          2)
+            gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 20 2>text
+            Q_result=$(cat text)
+            if [ "$Q_result" = "0" ]
+              then
+                rm R_result
+                rm text
+                exit 127;
+            else
+              gcc -o clark texteditor.o libclark.a
+              ./clark "$parameter" "$Q_result" "$Q_answer"
+               rm clark
+            fi ;;
+         3)
+           gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 30 2>text
+           Q_result=$(cat text)
+           if [ "$Q_result" = "0" ]
+             then
+                rm R_result
+                rm text
+                exit 127;
+            else
+              gcc -o clark texteditor.o libclark.a
+              ./clark "$parameter" "$Q_result" "$Q_answer"
+               rm clark
+            fi ;;
+         4)
+          gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 30 2>text
+          Q_result=$(cat text)
+          if [ "$Q_result" = "0" ]
+            then
+                rm R_result
+                rm text
+                exit 127;
+          else
+           gcc -o clark texteditor.o libclark.a
+           ./clark "$parameter" "$Q_result" "$Q_answer"
+            rm clark
+          fi ;;
+        5)
+          gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 30 2>text
+          Q_result=$(cat text)
+          if [ "$Q_result" = "0" ]
+            then
+                rm R_result
+                rm text
+                exit 127;
+          else
+              gcc -o clark texteditor.o libclark.a
+             ./clark "$parameter" "$Q_result" "$Q_answer"
+              rm clark
+          fi ;;
+        6)
+          gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 30 2>text
+          Q_result=$(cat text)
+          if [ "$Q_result" = "0" ]
+            then
+                rm R_result
+                rm text
+                exit 127;
+           else
+             gcc -o clark texteditor.o libclark.a
+             ./clark "$parameter" "$Q_result" "$Q_answer"
+             rm clark
+          fi ;;
+       7)
+         gdialog --title "FILENAME" --inputbox "ENTER THE NAME OF THE FILE " 10 30 2>text
+         Q_result=$(cat text)
+         if [ "$Q_result" = "0" ]
+            then
+                rm R_result
+                rm text
+                exit 127;
+         else
+             gcc -o clark texteditor.o libclark.a
+            ./clark "$parameter" "$Q_result" "$Q_answer"
+             rm clark
+         fi ;;
+       *)
+         rm R_result
+         unlink text
+         exit 126;;
+
+    esac
+  else
+     exit 127;
+ fi
+ }
+#the function below prompts the user to choose certain options to be performed
+options(){
+local Q_result
+local Q_answer
+local Q_file
+ gdialog --title "MENU" --menu "CHOOSE OPTIONS!" 26 60 40 1 "Libreoffice" 2 "cut" 3 "copy" 4 "makelink" 5 "paste" 6 "copy to" 7 "move to" 8 "move to trash" 9 "delete" 10 "new file" 11 "creat folder" 12 "rename" 13 "open terminal" 14 "open gedit text editor" 15 "compress" 16 "uncompress" 17 "encrypt" 18 "decrypt" 19 "compress(rle)" 20 "uncompress(rle)" 2>R_result 
+ 
+  Q_answer=$(cat R_result)
+if [ "$Q_answer" != 0 ]
+ then
+  case "$Q_answer" in
+     1)
+       gcc -o clark texteditor.o libclark.a
+        ./clark "$Q_answer"
+       ;;
+     2)
+       gdialog --title "TAG" --inputbox "ENTER THE NAME OF FILE" 10 30  2>text
+       Q_result=$(cat text)
+      if [ "$Q_result" != "0" ]
+          then
+              gcc -o clark texteditor.o libclark.a
+               ./clark "$Q_answer" "$Q_result"
+       else
+            rm R_result
+            rm text
+            exit 127
+       fi;;
+     3)
+       gdialog --title "TAG" --inputbox "ENTER THE NAME OF FILE" 10 30 2>text
+       Q_result=$(cat text)
+       if [ "$Q_result" != "0" ]
+          then
+              gcc -o clark texteditor.o libclark.a
+               ./clark "$Q_answer" "$Q_result"
+        else
+            rm R_result
+            rm text
+            exit 127
+        fi;;
+     4)
+       gdialog --title "TAG" --inputbox "ENTER THE NAME OF FILE" 10 30 2>text
+       Q_result=$(cat text)
+       if [ "$Q_result" != "0" ]
+          then
+              gcc -o clark texteditor.o libclark.a
+               ./clark "$Q_answer" "$Q_result"
+        else
+          rm R_result
+          rm text
+            exit 127
+        fi;;
+     5)
+       gdialog --title "TAG!" --inputbox "ENTER DESTINATION FOR PASTING" 10 20 2>text
+       Q_result=$(cat text)
+       gcc -o clark texteditor.o libclark.a
+        ./clark "$Q_answer" "$Q_result"
+         rm clark
+       ;;
+     6)
+       parameter=$Q_answer
+       if path "$1"
+         then
+              :
+       else
+          gdialog title "INFORMATION" --msgbox " PATH FAILED TO EXECUTE" 10 20
+          rm R_result
+          rm text
+          exit 127
+       fi;;
+     7)
+       parameter=$Q_answer
+       if path "$1"
+         then
+              :
+       else
+          gdialog title "INFORMATION" --msgbox " PATH FAILED TO EXECUTE" 10 20
+          rm R_result
+          rm text
+          exit 127
+       fi;;
+     8)
+       gdialog --title "TAGS" --inputbox "ENTER THE NAME OF THE FILE" 10 20 2>text
+       Q_result=$(cat text)
+       if [ "$Q_result" != "0" ]
+          then
+             gcc -o clark texteditor.o libclark.a
+             ./clark "$Q_answer" "$Q_result"
+        else
+           rm R_result
+           rm text
+           exit 127
+       fi;;
+     9)
+       gdialog --title "TAGS" --inputbox "ENTER THE NAME OF THE FILE" 10 20 2>text
+       Q_result=$(cat text)
+       if [ "$Q_result" != "0" ]
+          then
+             gcc -o clark texteditor.o libclark.a
+             ./clark "$Q_answer" "$Q_result"
+        else
+           rm R_result
+           rm text
+           exit 127
+       fi;;
+     10)
+       gcc -o clark texteditor.o libclark.a
+        ./clark T
+       ;;
+     11)
+        gcc -o clark texteditor.o libclark.a
+        ./clark E
+       ;;
+     12)
+        gdialog --title "TAGS" --inputbox "ENTER THE NAME OF FILE TO RENAME" 10 30 2>text
+       Q_result=$(cat text)
+        gdialog --title "TAGS" --inputbox "ENTER THE NEW NAME" 10 30 2>text
+       Q_file=$(cat text)
+       if [ "$Q_result" != "0" ] && test "$Q_file" != "0" 
+          then
+             gcc -o clark texteditor.o libclark.a
+             ./clark X "$Q_result" "$Q_file"
+        else
+           rm R_result
+           rm text
+           exit 127
+       fi;;
+     13)
+        if open_terminal
+          then
+              :
+         else
+            rm R_result
+            rm text
+            exit 127
+         fi;;
+     14)
+        if open_gedit
+          then
+              :
+         else
+           rm R_result
+           rm text
+           exit 127
+        fi;;
+     15)
+        if file_compress
+          then
+              :
+        else
+           rm R_result
+           rm text
+           exit 127
+        fi;;
+     16)
+        if un_compress
+           then
+               :
+         else
+             rm R_result
+           rm text
+           exit 127
+         fi;;
+   17)
+         gdialog --title "ENCRYPTION" --inputbox "ENTER THE NAME OF FILE TO ENCRYPT" 10 30 2>text
+       Q_result=$(cat text)
+             gcc -o clark texteditor.o libclark.a
+             ./clark Y "$Q_result" 
+      ;;
+    18)
+        gdialog --title "DECRYPTION" --inputbox "ENTER THE NAME OF FILE TO DECRYPT" 10 30 2>text
+       Q_result=$(cat text)
+             gcc -o clark texteditor.o libclark.a
+             ./clark Z "$Q_result" 
+        ;;
+     19)
+                gdialog --title "RUN LENGTH ENCODING" --inputbox "ENTER THE NAME OF FILE TO COMPRESS" 10 30 2>text
+       Q_result=$(cat text)
+             gcc -o clark texteditor.o libclark.a
+             ./clark F "$Q_result" 
+       ;;
+     20)
+        gdialog --title "RUN LENGTH ENCODING" --inputbox "ENTER THE NAME OF FILE TO UNCOMPRESS" 10 30 2>text
+       Q_result=$(cat text)
+             gcc -o clark texteditor.o libclark.a
+             ./clark D "$Q_result"
+       ;;
+     *)
+       rm R_result
+           rm text
+           exit 127
+       ;;
+  esac
+ else
+  rm R_result
+           rm text
+           exit 127
+ fi
+}
+#the main function of the program
+ if options
+   then
+        :
+  else
+    gdialog --title "INFORMATION" --infobox "CHECK SOURCE CODE" 10 18
+    gdialog --title "SOURCE CODE" --textbox window 100 100
+ fi
+ rm R_result
+ rm text
+ exit 0
+#end of script
+            
+
+        
+       
+
+      
+       
+      
+       
+   
+       
